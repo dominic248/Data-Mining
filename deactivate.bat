@@ -1,0 +1,1 @@
+"%~dp0venv-v3.8.0\Scripts\deactivate"
