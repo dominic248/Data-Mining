@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import Test
+from .views import NaiveBayes
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('test/', Test.as_view()),
+    path('naive-bayes/', NaiveBayes.as_view()),
 ]

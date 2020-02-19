@@ -1,0 +1,1 @@
+{"OUTLOOK":["Sunny"],"TEMPERATURE":["Hot"],"HUMIDITY":["Normal"],"WINDY":[false]}
