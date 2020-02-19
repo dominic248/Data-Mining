@@ -12,16 +12,18 @@ class Test(APIView):
             return Response({"failed":"12"})
         old_data1 = [x for x in csv_file.read().decode('UTF-8').split('\n') ] 
         old_data2=[y.split(',') for y in old_data1]
-        print(old_data2)  
+        # print(old_data2)  
         headers = old_data2[0]
         data  = pd.DataFrame(old_data2[1:], columns=headers)
+        data=data.dropna() 
         print(data)
-
+    
         column_names=[columnName for (columnName, columnData) in data.iteritems()][:-1]
         last_column_name=[columnName for (columnName, columnData) in data.iteritems()][-1]
         print(column_names,last_column_name)
 
         stat_str = request.data['stat']
+        print(stat_str)
         stat_dict = json.loads(stat_str)
         print(type(stat_dict))
         stat = pd.DataFrame(stat_dict) 
