@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import operator
 import json
+from django.http import HttpResponse
 
 class NaiveBayes(APIView):
     def post(self, request):
@@ -36,39 +37,45 @@ class NaiveBayes(APIView):
 
         n_counts=dict()
         P_array=dict()
-        for uniq in data[last_column_name].unique():
-            n_counts[uniq]=[]
-            P_array[uniq]=[]
 
-        # for i, j in stat.iterrows(): 
-        #     print(j) 
-        #     print() 
-        # for key, value in stat.iteritems(): 
-        #     print(key,str(value[0])=="Sunny") 
-        #     print(stat.shape[0]) 
-        # for i in stat.itertuples(): 
-        #     print(i,i[2])
-        #     print(i,i[2])
-        # for i in range(stat.shape[0]):
-        #     for column_name, value in stat.iteritems(): 
-        #         print(column_name,str(value[0])=="Sunny") 
-        #         print(stat.shape[0]) 
-        #         for uniq in data[last_column_name].unique():
-        #             n_counts[uniq].append(data[last_column_name][((data[column_name] == stat[column_name][i]) & (data[last_column_name] == uniq))].count())
-        #             P_array[uniq].append(n_counts[uniq][-1]/n[uniq])
-        # print(n_counts)
-        # print(P_array)
 
-        for column_name in column_names:
+        #------------------------For Single Data----------------------------------
+        # for uniq in data[last_column_name].unique():
+        #     n_counts[uniq]=[]
+        #     P_array[uniq]=[]
+        # for column_name in column_names:
+        #     for uniq in data[last_column_name].unique():
+        #         n_counts[uniq].append(data[last_column_name][((data[column_name] == stat[column_name][0]) & (data[last_column_name] == uniq))].count())
+        #         P_array[uniq].append(n_counts[uniq][-1]/n[uniq])
+        # multiply_array_P=dict()
+        # for uniq in data[last_column_name].unique():
+        #     multiply_array_P[uniq]=np.prod(P_array[uniq])*P[uniq]
+        # won=max(multiply_array_P.items(), key=operator.itemgetter(1))[0]
+        # print("X belongs to '"+str(won)+"' class: "+str(multiply_array_P[won])) 
+        # return Response({"success":"X belongs to '"+str(won)+"' class: "+str(multiply_array_P[won])}) 
+
+        #------------------------For Multiple Data----------------------------------
+        response=dict()
+        for i in range(stat.shape[0]):
             for uniq in data[last_column_name].unique():
-                n_counts[uniq].append(data[last_column_name][((data[column_name] == stat[column_name][0]) & (data[last_column_name] == uniq))].count())
-                P_array[uniq].append(n_counts[uniq][-1]/n[uniq])
-        # print(n_counts,P_array)
+                n_counts[uniq]=[]
+                P_array[uniq]=[]
+            for column_name, value in stat.iteritems(): 
+                print(column_name,str(value[0])=="Sunny") 
+                print(stat.shape[0]) 
+                for uniq in data[last_column_name].unique():
+                    n_counts[uniq].append(data[last_column_name][((data[column_name] == stat[column_name][i]) & (data[last_column_name] == uniq))].count())
+                    P_array[uniq].append(n_counts[uniq][-1]/n[uniq])
+            multiply_array_P=dict()
+            for uniq in data[last_column_name].unique():
+                multiply_array_P[uniq]=np.prod(P_array[uniq])*P[uniq]
 
-        multiply_array_P=dict()
-        for uniq in data[last_column_name].unique():
-            multiply_array_P[uniq]=np.prod(P_array[uniq])*P[uniq]
+            won=max(multiply_array_P.items(), key=operator.itemgetter(1))[0]
+            print("X belongs to '"+str(won)+"' class: "+str(multiply_array_P[won])) 
+            response["data "+str(i)]="X belongs to '"+str(won)+"' class: "+str(multiply_array_P[won]) 
 
-        won=max(multiply_array_P.items(), key=operator.itemgetter(1))[0]
-        print("X belongs to '"+str(won)+"' class: "+str(multiply_array_P[won])) 
-        return Response({"success":"X belongs to '"+str(won)+"' class: "+str(multiply_array_P[won])}) 
+            # response = HttpResponse(content_type='text/csv')
+            # response['Content-Disposition'] = 'attachment; filename=filename.csv'
+            # stat.to_csv(path_or_buf=response,sep=',',float_format='%.2f',index=False,decimal=",")
+            # return response
+        return Response(response) 
