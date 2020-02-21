@@ -11,6 +11,9 @@ class NaiveBayes(APIView):
         if not csv_file.name.endswith('.csv'):
             return Response({"failed":"12"})
         data = pd.read_csv(request.FILES.get('file'))
+        if request.POST.get('id_indices'):
+            print(json.loads(request.POST.get('id_indices')))
+            data=data.drop(json.loads(request.POST.get('id_indices')), axis=1)
         print(data)
     
         column_names=[columnName for (columnName, columnData) in data.iteritems()][:-1]
@@ -36,6 +39,25 @@ class NaiveBayes(APIView):
         for uniq in data[last_column_name].unique():
             n_counts[uniq]=[]
             P_array[uniq]=[]
+
+        # for i, j in stat.iterrows(): 
+        #     print(j) 
+        #     print() 
+        # for key, value in stat.iteritems(): 
+        #     print(key,str(value[0])=="Sunny") 
+        #     print(stat.shape[0]) 
+        # for i in stat.itertuples(): 
+        #     print(i,i[2])
+        #     print(i,i[2])
+        # for i in range(stat.shape[0]):
+        #     for column_name, value in stat.iteritems(): 
+        #         print(column_name,str(value[0])=="Sunny") 
+        #         print(stat.shape[0]) 
+        #         for uniq in data[last_column_name].unique():
+        #             n_counts[uniq].append(data[last_column_name][((data[column_name] == stat[column_name][i]) & (data[last_column_name] == uniq))].count())
+        #             P_array[uniq].append(n_counts[uniq][-1]/n[uniq])
+        # print(n_counts)
+        # print(P_array)
 
         for column_name in column_names:
             for uniq in data[last_column_name].unique():
