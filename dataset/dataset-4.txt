@@ -1,6 +1,0 @@
-stat
-{"Outlook": ["Sunny"], "Temperature": ["Cool"], "Humidity": ["High"], "Wind": ["Strong"]}
-
-{"Outlook": ["Sunny","Rain"], "Temperature": ["Cool","Mild"], "Humidity": ["High","Normal"], "Wind": ["Strong","Weak"]}
-id_indices
-["Day"]

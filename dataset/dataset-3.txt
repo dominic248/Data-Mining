@@ -1,1 +1,0 @@
-{"Home owner": ["No"], "Marital Status": ["Married"], "Job experience (1-5)": [3]}
